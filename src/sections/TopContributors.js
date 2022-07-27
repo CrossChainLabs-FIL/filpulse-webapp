@@ -11,7 +11,7 @@ import Scrollbar from '../components/Scrollbar';
 
 // ----------------------------------------------------------------------
 
-const MOCK_NEWS = [...Array(5)].map((_, index) => ({
+const MOCK_DATA = [...Array(7)].map((_, index) => ({
   id: mockData.id(index),
   title: mockData.text.title(index),
   description: mockData.text.description(index),
@@ -21,8 +21,8 @@ const MOCK_NEWS = [...Array(5)].map((_, index) => ({
 
 // ----------------------------------------------------------------------
 
-NewsItem.propTypes = {
-  news: PropTypes.shape({
+ContributorItem.propTypes = {
+  item: PropTypes.shape({
     id: PropTypes.string,
     description: PropTypes.string,
     image: PropTypes.string,
@@ -31,8 +31,8 @@ NewsItem.propTypes = {
   })
 };
 
-function NewsItem({ news }) {
-  const { title, postedAt } = news;
+function ContributorItem({ item }) {
+  const { title, postedAt } = item;
 
   return (
     <Stack direction="row" alignItems="center" spacing={2}>
@@ -54,8 +54,8 @@ export default function TopContributors() {
     <Card>
       <CardHeader title="Contributors of the month" />
         <Stack spacing={3} sx={{ p: 3, pr: 0 }}>
-          {MOCK_NEWS.map((news) => (
-            <NewsItem key={news.id} news={news} />
+          {MOCK_DATA.map((item) => (
+            <ContributorItem key={item.id} item={item} />
           ))}
         </Stack>
     </Card>
