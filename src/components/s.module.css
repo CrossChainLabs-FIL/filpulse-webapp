@@ -1,0 +1,32 @@
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 50px;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+}
+
+.item {
+  font-size: 15px;
+  line-height: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  margin-right: 32px;
+  color: #B2B2B2;
+}
+
+.item:hover {
+  color: var(--theme-text);
+}
+
+.item:last-child {
+  margin-right: 0;
+}
+
+.contact {
+  user-select: all;
+}

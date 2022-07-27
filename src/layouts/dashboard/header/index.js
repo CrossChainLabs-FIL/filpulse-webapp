@@ -1,5 +1,11 @@
 import { alpha, styled } from '@mui/material/styles';
-import { Box, AppBar, Toolbar, Typography } from '@mui/material';
+import { AppBar, Toolbar, Typography, Container, Grid } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+
+import { createStyles, makeStyles } from "@material-ui/core/styles";
+import logo from "../../../logo.svg";
+
+const BG_COLOR = '#ffffff';
 
 const HEIGHT = 92;
 
@@ -16,15 +22,46 @@ const ToolbarStyle = styled(Toolbar)(({ theme }) => ({
     padding: theme.spacing(0, 5)
 }));
 
+const TextTypography = styled(Typography)(({ theme }) => ({
+  color: theme.palette.text.primary,
+  fontSize: theme.typography.h3.fontSize,
+  fontWeight: theme.typography.h3.fontWeight,
+  lineHeight: theme.typography.h3.lineHeight,
+}));
+
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1
+    },
+    menuButton: {
+      marginRight: theme.spacing(2)
+    },
+    title: {
+      flexGrow: 1,
+      textAlign: "center"
+    },
+    logo: {
+      maxWidth: 40,
+      marginRight: '10px'
+    }
+  })
+);
+
 export default function DashboardNavbar() {
+  const classes = useStyles();
+
   return (
-    <RootStyle>
-      <ToolbarStyle>
-        <Box sx={{ flexGrow: 1 }} />
-          <Typography variant="h6">
-            FilPulse
-          </Typography>
+    <AppBar sx={{ boxShadow: 0, bgcolor: BG_COLOR }}>
+      <ToolbarStyle disableGutters>
+      <Container maxWidth='xl'>
+          <Grid container>
+            <Grid item xs={12} md={0}/>
+            <img src={logo} alt="" className={classes.logo} />
+            <TextTypography>FilPulse</TextTypography>
+          </Grid>
+        </Container>
       </ToolbarStyle>
-    </RootStyle>
+    </AppBar>
   );
 }

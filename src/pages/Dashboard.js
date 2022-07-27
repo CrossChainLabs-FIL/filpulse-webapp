@@ -1,6 +1,8 @@
 import { useTheme } from '@mui/material/styles';
 import { Container, Grid } from '@mui/material';
 import Page from '../components/Page';
+import { Footer } from '../components/Footer';
+
 import { 
   RecentCommits, 
   Commits, 
@@ -66,7 +68,9 @@ export default function Dashboard() {
           </Grid>
 
         </Grid>
+        
       </Container>
+      <Footer />
     </Page>
   );
 }

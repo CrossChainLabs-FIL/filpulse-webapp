@@ -39,11 +39,11 @@ function CommitItem({ item }) {
     <Stack direction="row" alignItems="center" spacing={2}>
             <Box component="img" src="https://avatars.githubusercontent.com/u/93196588?s=400&v=4" sx={{ width: 30, height: 30, borderRadius: 1.5 }} />
             <Box sx={{ minWidth: 240 }}>
-               <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+               <Typography variant="body2" sx={{ color: 'text.primary' }} noWrap>
                   {description}
                 </Typography>
                 <Stack direction="row" alignItems="center" spacing={1} justify="space-between">
-                  <Link component={RouterLink} to="#" color="inherit">
+                  <Link component={RouterLink} to="#" color="text.secondary">
                     <Typography variant="subtitle2" noWrap>
                       {title}
                     </Typography>
@@ -51,7 +51,7 @@ function CommitItem({ item }) {
                   <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
                     .
                   </Typography>
-                  <Link component={RouterLink} to="#" color="inherit">
+                  <Link component={RouterLink} to="#" color="text.secondary">
                     <Typography variant="subtitle2" noWrap>
                       filecoin-project/lotus
                     </Typography>
