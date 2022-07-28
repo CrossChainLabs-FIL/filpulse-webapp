@@ -1,7 +1,9 @@
 import { useTheme } from '@mui/material/styles';
 import { Container, Grid } from '@mui/material';
+import { useState, useEffect } from 'react';
 import Page from '../components/Page';
 import { Footer } from '../components/Footer';
+import { Client } from '../utils/client';
 
 import { 
   RecentCommits, 
@@ -12,9 +14,27 @@ import {
   ActiveContributors,
 } from '../sections';
 
+const client = new Client();
+
 export default function Dashboard() {
   const theme = useTheme();
   const  themeStretch  = false;
+
+  const [state, setState] = useState({ loading: true, commits: '', repositories: '', contributors: '', prs: '' });
+  useEffect(() => {
+    setState({ loading: true });
+
+    client.get('overview').then((overview) => {
+      setState({
+        loading: false,
+        commits: overview.commits,
+        repositories: overview.repos,
+        contributors: overview.contributors,
+        prs: overview.prs,
+      })
+      
+    });
+  }, [setState]);
 
   return (
     <Page title="FilPulse">
@@ -23,27 +43,27 @@ export default function Dashboard() {
           <Grid item xs={12} md={3}>
             <CardWidget
               name='Commits'
-              value='714000'
+              value={((state.commits) ? (state.commits) : 'N/A')}
             />
           </Grid>
 
           <Grid item xs={12} md={3}>
             <CardWidget
               name='Repositories'
-              value='1413'
+              value={((state.repositories) ? (state.repositories) : 'N/A')}
             />
           </Grid>
 
           <Grid item xs={12} md={3}>
             <CardWidget
               name='Contributors'
-              value='512'
+              value={((state.contributors) ? (state.contributors) : 'N/A')}
             />
           </Grid>
           <Grid item xs={12} md={3}>
             <CardWidget
               name='PRs'
-              value='23234'
+              value={((state.prs) ? (state.prs) : 'N/A')}
             />
           </Grid>
 
