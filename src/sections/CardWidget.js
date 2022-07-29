@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { alpha, useTheme, styled } from '@mui/material/styles';
+import { useTheme, styled } from '@mui/material/styles';
 import { Box, Card, Typography } from '@mui/material';
 import palette from '../theme/palette';
 

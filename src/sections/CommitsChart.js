@@ -1,28 +1,48 @@
 import merge from 'lodash/merge';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { Card, CardHeader, Box } from '@mui/material';
 import { CustomChart } from '../components/chart';
+import { Client } from '../utils/client';
 
-const CHART_DATA = [
-  {
-    year: 2021,
-    data: [
-      { name: 'Commits', data: [25, 15, 35, 42, 45, 39, 55, 65, 59] },
-    ]
-  }
-];
+const client = new Client();
 
 export default function Commits() {
-  const [seriesData, setSeriesData] = useState(2021);
+  const [state, setState] = useState({
+    loading: true, data: [
+      { name: 'Commits', data: [] }
+    ]
+  });
 
-  const handleChangeSeriesData = (event) => {
-    setSeriesData(Number(event.target.value));
-  };
+
+  useEffect(() => {
+    client.get('commits').then((commits) => {
+      if (commits.length > 12) {
+        commits.splice(0, commits.length - 12);
+      }
+
+      let commitsData = [];
+      let categories = [];
+
+      commits.forEach(item => {
+        let rawDate = new Date(item.month);
+        commitsData.push(item.commits);
+        categories.push(rawDate.toLocaleString('en-US', { month: 'short' }));
+      });
+     
+      setState({
+        loading: false, 
+        categories: categories,
+        data: [
+          { name: 'Commits', data: commitsData }
+        ]
+      });
+    });
+  }, [setState]);
 
   const chartOptions = merge(CustomChart(), {
     xaxis: {
-      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
+      categories: state.categories
     }
   });
 
@@ -32,14 +52,9 @@ export default function Commits() {
         title="Commits"
         subheader=""
       />
-
-      {CHART_DATA.map((item) => (
-        <Box key={item.year} sx={{ mt: 3, mx: 3 }} dir="ltr">
-          {item.year === seriesData && (
-            <ReactApexChart type="bar" series={item.data} options={chartOptions} height={364} />
-          )}
+        <Box  sx={{ mt: 3, mx: 3 }} dir="ltr">
+            <ReactApexChart type="bar" series={state.data} options={chartOptions} height={364} />
         </Box>
-      ))}
     </Card>
   );
 }

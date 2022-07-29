@@ -1,25 +1,10 @@
 import PropTypes from 'prop-types';
-import { Link as RouterLink } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { fToNow } from '../utils/format';
-// material
-import { Box, Stack, Link, Card, Button, Divider, Typography, CardHeader, Grid } from '@mui/material';
-// utils
+import { Box, Stack, Card, Typography, CardHeader } from '@mui/material';
+import { Client } from '../utils/client';
 
-import mockData from './mock-data';
-//
-import Scrollbar from '../components/Scrollbar';
-
-// ----------------------------------------------------------------------
-
-const MOCK_DATA = [...Array(5)].map((_, index) => ({
-  id: mockData.id(index),
-  title: mockData.text.title(index),
-  description: mockData.text.description(index),
-  image: mockData.image.cover(index),
-  postedAt: mockData.time(index)
-}));
-
-// ----------------------------------------------------------------------
+const client = new Client();
 
 CommitItem.propTypes = {
   item: PropTypes.shape({
@@ -33,51 +18,59 @@ CommitItem.propTypes = {
 
 
 function CommitItem({ item }) {
-  const { image, title, description, postedAt } = item;
+  const { dev_name, repo, organisation, commit_hash, commit_date, avatar_url, message } = item;
 
   return (
     <Stack direction="row" alignItems="center" spacing={2}>
-            <Box component="img" src="https://avatars.githubusercontent.com/u/93196588?s=400&v=4" sx={{ width: 30, height: 30, borderRadius: 1.5 }} />
+            <Box component="img" src={avatar_url} sx={{ width: 30, height: 30, borderRadius: 1.5 }} />
             <Box sx={{ minWidth: 240 }}>
                <Typography variant="body2" sx={{ color: 'text.primary' }} noWrap>
-                  {description}
+                  {message}
                 </Typography>
                 <Stack direction="row" alignItems="center" spacing={1} justify="space-between">
-                  <Link component={RouterLink} to="#" color="text.secondary">
-                    <Typography variant="subtitle2" noWrap>
-                      {title}
-                    </Typography>
-                  </Link>
+                  
+                  <Typography variant="subtitle2" noWrap>
+                    <a target="_blank" href={"https://github.com/" + dev_name}>{dev_name}</a>
+                  </Typography>
                   <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
                     .
                   </Typography>
-                  <Link component={RouterLink} to="#" color="text.secondary">
                     <Typography variant="subtitle2" noWrap>
-                      filecoin-project/lotus
+                      <a target="_blank" href={"https://github.com/" + organisation + "/" + repo}>{organisation}/{repo}</a>
                     </Typography>
-                  </Link>
                 </Stack>
               </Box>
               <Box flexGrow={2}></Box>
             <Typography variant="caption" align="right" sx={{ pr: 3, flexShrink: 0, color: 'text.secondary'}}>
-              {fToNow(postedAt)}
+              {fToNow(commit_date)}
             </Typography>
     </Stack>
   );
 }
 
 export default function RecentCommits() {
+  const [state, setState] = useState({
+    loading: true, recent_commits: []
+  });
+
+  useEffect(() => {
+    client.get('recent_commits').then((recent_commits) => {
+      setState({
+        loading: false, 
+        recent_commits: recent_commits,
+      });
+    });
+  }, [setState]);
+
   return (
     <Card>
       <CardHeader title="Recent Commits" />
-
         <Stack spacing={3} sx={{ p: 3, pr: 0 }}>
-          {MOCK_DATA.map((item) => (
-            <CommitItem key={item.id} item={item} />
+          {state.recent_commits.map((item) => (
+            <CommitItem item={item} />
           ))}
         </Stack>
-
-
     </Card>
+
   );
 }

@@ -11,7 +11,7 @@ export class Client {
   async get(endpoint) {
     const response = await axios.get(this.api + endpoint);
 
-    if (!response || response.status != 200) {
+    if (!response || response.status !== 200) {
       return undefined;
     }
 
