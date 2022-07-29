@@ -1,18 +1,17 @@
 import { merge } from 'lodash';
 import ReactApexChart from 'react-apexcharts';
-// material
 import { useTheme, styled } from '@mui/material/styles';
 import { Card, CardHeader } from '@mui/material';
-// utils
-import { fNumber } from '../utils/format';
-//
-//import { CustomChart } from '../components/chart';
+import { number } from '../utils/format';
 import { CustomChart } from '../components/chart';
+import { useState, useEffect } from 'react';
 
-// ----------------------------------------------------------------------
+import { Client } from '../utils/client';
 
 const CHART_HEIGHT = 392;
 const LEGEND_HEIGHT = 72;
+
+const client = new Client();
 
 const ChartWrapperStyle = styled('div')(({ theme }) => ({
   height: CHART_HEIGHT,
@@ -30,50 +29,50 @@ const ChartWrapperStyle = styled('div')(({ theme }) => ({
   }
 }));
 
-// ----------------------------------------------------------------------
-
-const CHART_DATA = [44, 75];
-
 export default function Issues() {
   const theme = useTheme();
+  const [state, setState] = useState({ loading: true, chartData: [0, 0] });
+  
+  useEffect(() => {
+    client.get('overview').then((overview) => {
+      let open = parseInt((overview?.issues_open) ? overview?.issues_open : 0);
+      let closed = parseInt((overview?.issues_closed) ? overview?.issues_closed : 0);
+
+      setState({ loading: false, chartData: [open, closed] });
+    });
+  }, [setState]);
 
   const chartOptions = merge(CustomChart(), {
+    colors: [
+      theme.palette.chart.yellow[0],
+      theme.palette.primary.main
+    ],
     labels: ['Open', 'Closed'],
+    stroke: { colors: [theme.palette.background] },
     legend: { floating: true, horizontalAlign: 'center' },
-    fill: {
-      type: 'gradient',
-      gradient: {
-        colorStops: [
-          [
-            {
-              offset: 0,
-              color: theme.palette.primary.light
-            },
-            {
-              offset: 100,
-              color: theme.palette.primary.main
-            }
-          ],
-          [
-            {
-              offset: 0,
-              color: theme.palette.warning.light
-            },
-            {
-              offset: 100,
-              color: theme.palette.warning.main
-            }
-          ]
-        ]
+    tooltip: {
+      fillSeriesColor: false,
+      y: {
+        formatter: (seriesName) => number(seriesName),
+        title: {
+          formatter: (seriesName) => `${seriesName}`
+        }
       }
     },
     plotOptions: {
-      radialBar: {
-        hollow: { size: '68%' },
-        dataLabels: {
-          value: { offsetY: 16 },
-          total: {
-            formatter: () => fNumber(2324)
+      pie: {
+        donut: {
+          size: '90%',
+          labels: {
+            value: {
+              formatter: (val) => number(val)
+            },
+            total: {
+              formatter: (w) => {
+                const sum = w.globals.seriesTotals.reduce((a, b) => a + b, 0);
+                return number(sum);
+              }
+            }
           }
         }
       }
@@ -84,7 +83,7 @@ export default function Issues() {
     <Card>
       <CardHeader title="Issues" />
       <ChartWrapperStyle dir="ltr">
-        <ReactApexChart type="radialBar" series={CHART_DATA} options={chartOptions} height={310} />
+        <ReactApexChart type="donut" series={state.chartData} options={chartOptions} height={310} />
       </ChartWrapperStyle>
     </Card>
   );
