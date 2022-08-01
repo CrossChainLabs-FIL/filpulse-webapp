@@ -17,7 +17,9 @@ export default function Commits() {
 
   useEffect(() => {
     client.get('commits').then((commits) => {
+      commits.pop();
       if (commits.length > 12) {
+        //remove first length - 12 elements
         commits.splice(0, commits.length - 12);
       }
 
@@ -25,9 +27,8 @@ export default function Commits() {
       let categories = [];
 
       commits.forEach(item => {
-        let rawDate = new Date(item.month);
         commitsData.push(item.commits);
-        categories.push(rawDate.toLocaleString('en-US', { month: 'short' }));
+        categories.push(item.display_month);
       });
      
       setState({

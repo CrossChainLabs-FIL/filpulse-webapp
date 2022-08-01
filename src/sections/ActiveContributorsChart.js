@@ -16,16 +16,18 @@ export default function ActiveContributors() {
 
   useEffect(() => {
     client.get('active_contributors').then((contributors) => {
+      contributors.pop();
+
       if (contributors.length > 12) {
+        //remove first length - 12 elements
         contributors.splice(0, contributors.length - 12);
       }
       let contributorsData = [];
       let categories = [];
 
         contributors.forEach(item => {
-          let rawDate = new Date(item.month);
           contributorsData.push(item.active_contributors);
-          categories.push(rawDate.toLocaleString('en-US', { month: 'short' }));
+          categories.push(item.display_month);
       });
      
       setState({

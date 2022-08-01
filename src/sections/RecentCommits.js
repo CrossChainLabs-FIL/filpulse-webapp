@@ -38,6 +38,12 @@ function CommitItem({ item }) {
                     <Typography variant="subtitle2" noWrap>
                       <a target="_blank" href={"https://github.com/" + organisation + "/" + repo}>{organisation}/{repo}</a>
                     </Typography>
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+                    .
+                  </Typography>
+                  <Typography variant="subtitle2" noWrap>
+                      <a target="_blank" href={"https://github.com/" + organisation + "/" + repo + "/commit/" + commit_hash}>{commit_hash?.substring(0,7)}</a>
+                    </Typography>
                 </Stack>
               </Box>
               <Box flexGrow={2}></Box>
