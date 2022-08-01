@@ -51,7 +51,7 @@ export default function TopContributors() {
       <CardHeader title="Contributors of the month" />
         <Stack spacing={1.4} sx={{ p: 3, pr: 0 }}>
           {state.top_contributors.map((item) => (
-            <ContributorItem item={item} />
+            <ContributorItem key={item.dev_name} item={item} />
           ))}
         </Stack>
     </Card>

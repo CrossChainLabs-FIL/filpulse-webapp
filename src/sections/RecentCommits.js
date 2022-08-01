@@ -60,12 +60,25 @@ export default function RecentCommits() {
   });
 
   useEffect(() => {
+    let interval = setInterval( () => {
+      client.get('recent_commits').then((recent_commits) => {
+        setState({
+          loading: false, 
+          recent_commits: recent_commits,
+        });
+      });
+    }, 15*60*1000);
     client.get('recent_commits').then((recent_commits) => {
       setState({
         loading: false, 
         recent_commits: recent_commits,
       });
     });
+
+    return function cleanup() {
+      console.log('interval cleanup');
+      clearInterval(interval);
+    };
   }, [setState]);
 
   return (
@@ -73,7 +86,7 @@ export default function RecentCommits() {
       <CardHeader title="Recent Commits" />
         <Stack spacing={3} sx={{ p: 3, pr: 0 }}>
           {state.recent_commits.map((item) => (
-            <CommitItem item={item} />
+            <CommitItem key={item.commit_hash} item={item} />
           ))}
         </Stack>
     </Card>
