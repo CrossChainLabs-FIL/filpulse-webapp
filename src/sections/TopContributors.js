@@ -41,7 +41,7 @@ export default function TopContributors() {
     client.get('top_contributors').then((top_contributors) => {
       setState({
         loading: false, 
-        top_contributors: top_contributors.slice(0,9),
+        top_contributors: top_contributors.slice(0,5),
       });
     });
   }, [setState]);
@@ -49,7 +49,7 @@ export default function TopContributors() {
   return (
     <Card>
       <CardHeader title="Contributors of the month" />
-        <Stack spacing={1.4} sx={{ p: 3, pr: 0 }}>
+        <Stack spacing={5.37} sx={{ p: 5.4, pr: 0 }}>
           {state.top_contributors.map((item) => (
             <ContributorItem key={item.dev_name} item={item} />
           ))}
